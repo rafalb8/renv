@@ -1,10 +1,8 @@
 package log
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
-	"reflect"
 	"time"
 
 	"github.com/rafalb8/renv/logger/level"
@@ -14,17 +12,7 @@ type SimpleLogger struct {
 }
 
 func (log *SimpleLogger) format(lvl level.Level, in ...any) {
-	fmt.Print(time.Now().Format("15:04:05.000"), " ", lvl.Color(), " ")
-	if len(in) == 1 && reflect.Indirect(reflect.ValueOf(in[0])).Kind() == reflect.Struct {
-		data, err := json.MarshalIndent(in[0], "", "  ")
-		if err != nil {
-			goto simplePrint
-		}
-		fmt.Println("PrettyPrint:")
-		fmt.Println(string(data))
-		return
-	}
-simplePrint:
+	fmt.Print(time.Now().Format("15:04:05.00000"), " ", lvl.Color(), " ")
 	fmt.Println(in...)
 }
 

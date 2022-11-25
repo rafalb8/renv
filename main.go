@@ -14,5 +14,5 @@ func main() {
 	var mod types.Module = &types.BaseModule{}
 
 	log.Error(yaml.Unmarshal(f, mod))
-	log.Info(mod)
+	log.Info(log.JSON(mod))
 }

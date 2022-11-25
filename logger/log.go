@@ -1,6 +1,7 @@
 package log
 
 import (
+	"encoding/json"
 	"os"
 )
 
@@ -11,6 +12,14 @@ type Logger interface {
 	Error(...any)
 	Fatal(...any)
 }
+
+var (
+	Debug   func(in ...any) = func(in ...any) {}
+	Info    func(in ...any) = func(in ...any) {}
+	Warning func(in ...any) = func(in ...any) {}
+	Error   func(in ...any) = func(in ...any) {}
+	Fatal   func(in ...any) = func(in ...any) {}
+)
 
 func init() {
 	var logger Logger = &SimpleLogger{}
@@ -37,10 +46,7 @@ func init() {
 	}
 }
 
-var (
-	Debug   func(in ...any) = func(in ...any) {}
-	Info    func(in ...any) = func(in ...any) {}
-	Warning func(in ...any) = func(in ...any) {}
-	Error   func(in ...any) = func(in ...any) {}
-	Fatal   func(in ...any) = func(in ...any) {}
-)
+func JSON(in any) string {
+	x, _ := json.MarshalIndent(in, "", "  ")
+	return string(x)
+}
