@@ -9,6 +9,7 @@ type CMD struct {
 }
 
 func (cmd CMD) Run(args utils.FIFO) bool {
+	utils.ElevatePrivilages(append([]string{"install"}, args...)...)
 	cmd.Help()
 	return true
 }
