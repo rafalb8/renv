@@ -40,8 +40,6 @@
  - renv apply work - apply config from work dir
  - renv apply - apply last config
  - renv edit - open vscode in $HOME/.renv
-
-## flags
- - --user overides user slice in renv.json file
+ - renv install btop zsh ... - install packages using local package manager 
 
 
