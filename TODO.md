@@ -8,7 +8,7 @@
 // renv.json
 {
     "include":["ohmyzsh.json"],
-    "bin": ["btop", "git", "zsh"],
+    "packages": ["btop", "git", "zsh"],
     "files": {
         ".zshrc": "$HOME/.zshrc",
         ".gitconfig": "$HOME/.gitconfig"
@@ -16,6 +16,8 @@
 }
 // ohmyzsh.json
 {
+    "distro": ["arch"],
+    "test": "test -d $HOME/.oh-my-zsh",
     "bin": ["curl","git", "zsh"],
     "cmd": [
         "curl ... | sh"
@@ -31,7 +33,8 @@
 
 ## run steps
  - run `include`s
- - install bins from `bin`
+ - check `distro` and run `test`
+ - install pkgs from `packages` using renv install list...
  - run `cmd`
  - copy `files` (no patching)
 
