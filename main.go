@@ -13,10 +13,13 @@ import (
 )
 
 func init() {
+	cache.Set("homedir", func() any {
+		home, _ := os.UserHomeDir()
+		return home
+	})
 	cache.Set("config", func() any {
 		cfg := &types.Config{}
-		home, _ := os.UserHomeDir()
-		f, err := os.Open(filepath.Join(home, ".config", "renv", "config.json"))
+		f, err := os.Open(filepath.Join(cache.Get[string]("homedir"), ".config", "renv", "config.json"))
 		if err != nil {
 			return cfg
 		}

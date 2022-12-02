@@ -18,8 +18,7 @@ func (cmd CMD) Run(args utils.FIFO) bool {
 
 	dir := filepath.Dir(cfg.LastEnvPath)
 	if dir == "." {
-		home, _ := os.UserHomeDir()
-		dir = filepath.Join(home, ".renv")
+		dir = filepath.Join(cache.Get[string]("homedir"), ".renv")
 		os.MkdirAll(dir, 0744)
 	}
 
