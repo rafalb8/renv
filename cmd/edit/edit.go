@@ -17,12 +17,13 @@ func (cmd CMD) Run(args utils.FIFO) bool {
 	cfg := cache.Get[*types.Config]("config")
 
 	dir := filepath.Dir(cfg.LastEnvPath)
-	if dir == "" {
+	if dir == "." {
 		home, _ := os.UserHomeDir()
 		dir = filepath.Join(home, ".renv")
 		os.MkdirAll(dir, 0744)
 	}
 
+	log.Info("Starting vscode in", dir)
 	err := utils.RunCommand("code " + dir)
 	if err != nil {
 		log.Error(err)
