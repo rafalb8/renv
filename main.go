@@ -17,9 +17,15 @@ func init() {
 		home, _ := os.UserHomeDir()
 		return home
 	})
+	cache.Set("defaultEnv", func() any {
+		return filepath.Join(cache.Get[string]("homedir"), ".renv")
+	})
+	cache.Set("configPath", func() any {
+		return filepath.Join(cache.Get[string]("homedir"), ".config", "renv", "config.json")
+	})
 	cache.Set("config", func() any {
 		cfg := &types.Config{}
-		f, err := os.Open(filepath.Join(cache.Get[string]("homedir"), ".config", "renv", "config.json"))
+		f, err := os.Open(cache.Get[string]("configPath"))
 		if err != nil {
 			return cfg
 		}

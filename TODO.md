@@ -18,7 +18,7 @@
 {
     "distro": ["arch"],
     "test": "test -d $HOME/.oh-my-zsh",
-    "bin": ["curl","git", "zsh"],
+    "packages": ["curl","git", "zsh"],
     "cmd": [
         "curl ... | sh"
     ]
@@ -32,8 +32,8 @@
  - should work if run from root or from other user
 
 ## run steps
- - run `include`s
  - check `distro` and run `test`
+ - run `include`s
  - install pkgs from `packages` using renv install list...
  - run `cmd`
  - copy `files` (no patching)

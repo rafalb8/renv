@@ -10,6 +10,7 @@ import (
 )
 
 type Config struct {
+	// Path to json file
 	LastEnvPath string
 }
 
@@ -20,7 +21,7 @@ func (cfg *Config) Save() {
 		return
 	}
 
-	path := filepath.Join(cache.Get[string]("homedir"), ".config", "renv", "config.json")
+	path := cache.Get[string]("configPath")
 	os.MkdirAll(filepath.Dir(path), 0744)
 	err = os.WriteFile(path, data, 0644)
 	if err != nil {

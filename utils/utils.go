@@ -11,6 +11,13 @@ import (
 
 type FIFO []string
 
+func (fifo FIFO) Peek() string {
+	if len(fifo) == 0 {
+		return ""
+	}
+	return fifo[0]
+}
+
 func (fifo *FIFO) Pop() string {
 	if len(*fifo) == 0 {
 		return ""
@@ -47,4 +54,27 @@ func RunSelf(args ...string) {
 		log.Fatal(err)
 	}
 	RunCommand(fmt.Sprintf("%s %s", exe, strings.Join(args, " ")))
+}
+
+func SliceContains[T comparable](slice []T, value T) bool {
+	for _, v := range slice {
+		if v == value {
+			return true
+		}
+	}
+	return false
+}
+
+func CopyFile(sourceFile, destinationFile string) {
+	input, err := os.ReadFile(sourceFile)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+
+	err = os.WriteFile(destinationFile, input, 0644)
+	if err != nil {
+		log.Error(err)
+		return
+	}
 }

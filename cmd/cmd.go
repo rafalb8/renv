@@ -48,7 +48,7 @@ func (cmd IncorrectCMD) Help() {
 func cmdFromName(name string) CMD {
 	switch name {
 	case "apply":
-		return apply.CMD{}
+		return &apply.CMD{SaveConfig: true}
 	case "edit":
 		return edit.CMD{}
 	case "install":
