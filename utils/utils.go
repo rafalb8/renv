@@ -22,6 +22,7 @@ func (fifo *FIFO) Pop() string {
 
 func RunCommand(cmd string) error {
 	command := exec.Command("/bin/sh", "-c", cmd)
+	command.Env = os.Environ()
 	command.Stdin = os.Stdin
 	command.Stdout = os.Stdout
 	command.Stderr = os.Stderr

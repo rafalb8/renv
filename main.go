@@ -1,24 +1,29 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/rafalb8/renv/cmd"
 	log "github.com/rafalb8/renv/logger"
+	"github.com/rafalb8/renv/types"
 	"github.com/rafalb8/renv/utils/cache"
 )
 
-type REnv struct {
-	Include  []string          // Include other conf files
-	Distro   []string          // Check if distroID on list
-	Test     string            // Run cmd and check if exited with 0
-	Packages []string          // Install pkgs
-	CMD      []string          // Run cmd
-	Files    map[string]string // Copy files
-}
-
 func init() {
+	cache.Set("config", func() any {
+		cfg := &types.Config{}
+		home, _ := os.UserHomeDir()
+		f, err := os.Open(filepath.Join(home, ".config", "renv", "config.json"))
+		if err != nil {
+			return cfg
+		}
+		json.NewDecoder(f).Decode(cfg)
+		return cfg
+	})
+
 	cache.Set("distro", func() any {
 		data, err := os.ReadFile("/etc/os-release")
 		if err != nil {
