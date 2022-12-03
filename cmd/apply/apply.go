@@ -41,13 +41,18 @@ func (cmd *CMD) Run(args utils.FIFO) bool {
 
 	if cmd.SaveConfig {
 		log.Info("Saving config")
-		cfg.LastEnvPath = cmd.env
+		cfg.LastEnvPath, _ = filepath.Abs(cmd.env)
 		cfg.Save()
 	}
 	return true
 }
 
 func (cmd CMD) Execute(renv *types.REnv) {
+	if renv == nil {
+		log.Error("File not found")
+		return
+	}
+
 	log.Info("Checking distro")
 	if len(renv.Distro) > 0 && !utils.SliceContains(renv.Distro, cache.Get[string]("distro")) {
 		// skip run

@@ -18,8 +18,11 @@ func LoadREnv(path string) *REnv {
 	renv := &REnv{}
 	f, err := os.Open(path)
 	if err != nil {
-		return renv
+		return nil
 	}
-	json.NewDecoder(f).Decode(renv)
+	err = json.NewDecoder(f).Decode(renv)
+	if err != nil {
+		return nil
+	}
 	return renv
 }
