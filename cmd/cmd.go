@@ -11,6 +11,8 @@ import (
 	"github.com/rafalb8/renv/utils"
 )
 
+var Version = "dev"
+
 type CMD interface {
 	Run(args utils.FIFO) bool
 	Help()
@@ -28,10 +30,11 @@ func (cmd REnv) Run(args utils.FIFO) bool {
 }
 
 func (cmd REnv) Help() {
-	log.Info("possible renv arguments:")
-	log.Info("apply")
-	log.Info("edit")
-	log.Info("install")
+	log.Info("Possible renv arguments:")
+	log.Info(" apply")
+	log.Info(" edit")
+	log.Info(" install")
+	log.Info(" version")
 }
 
 type IncorrectCMD string
@@ -55,6 +58,9 @@ func cmdFromName(name string) CMD {
 		return install.CMD{}
 	case "renv":
 		return REnv{}
+	case "version":
+		log.Info("Version:", Version)
+		os.Exit(0)
 	}
 	return IncorrectCMD(name)
 }
