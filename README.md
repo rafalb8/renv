@@ -4,11 +4,7 @@ Tool for Linux distro configuration
 # Installation
 To install run:
 ```bash
-curl ... | sh
-```
-or
-```bash
-wget -O - ... | sh
+curl -sfL https://raw.githubusercontent.com/rafalb8/renv/main/install.sh | sh
 ```
 
 # Usage
