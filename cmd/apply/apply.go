@@ -53,14 +53,16 @@ func (cmd CMD) Execute(renv *types.REnv) {
 		return
 	}
 
-	log.Info("Checking distro")
-	if len(renv.Distro) > 0 && !utils.SliceContains(renv.Distro, cache.Get[string]("distro")) {
-		// skip run
-		return
+	if len(renv.Distro) > 0 {
+		log.Info("Checking distro")
+		if !utils.SliceContains(renv.Distro, cache.Get[string]("distro")) {
+			// skip run
+			return
+		}
 	}
 
-	log.Info("Checking test")
 	if renv.Test != "" {
+		log.Info("Checking test")
 		err := utils.RunCommand(renv.Test)
 		if err != nil {
 			log.Warning("Test Failed")
