@@ -3,7 +3,6 @@ package install
 import (
 	"fmt"
 	"os/exec"
-	"strings"
 
 	log "github.com/rafalb8/renv/logger"
 	"github.com/rafalb8/renv/utils"
@@ -24,14 +23,7 @@ type CMD struct {
 }
 
 func (cmd CMD) Run(args utils.FIFO) bool {
-	missing := []string{}
-	for _, pkg := range args {
-		_, err := exec.LookPath(pkg)
-		if err != nil {
-			missing = append(missing, pkg)
-		}
-	}
-
+	missing := getMissingPkgs(args)
 	if len(missing) == 0 {
 		return true
 	}
@@ -42,11 +34,24 @@ func (cmd CMD) Run(args utils.FIFO) bool {
 	pkgMgr := packageManagers[cache.Get[string]("distro")]
 
 	log.Info("Installing packages:", missing)
-	err := utils.RunCommand(fmt.Sprintf("%s %s", pkgMgr, strings.Join(missing, " ")))
-	if err != nil {
-		log.Error("failed to install some packages")
+	for _, pkg := range missing {
+		err := utils.RunCommand(fmt.Sprintf("%s %s", pkgMgr, pkg))
+		if err != nil {
+			log.Error("failed to install", pkg)
+		}
 	}
 	return true
+}
+
+func getMissingPkgs(pkgs []string) []string {
+	missing := make([]string, 0, len(pkgs))
+	for _, pkg := range pkgs {
+		_, err := exec.LookPath(pkg)
+		if err != nil {
+			missing = append(missing, pkg)
+		}
+	}
+	return missing
 }
 
 func (cmd CMD) Help() {

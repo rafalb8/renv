@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	log "github.com/rafalb8/renv/logger"
+	"github.com/rafalb8/renv/utils/cache"
 )
 
 type FIFO []string
@@ -66,15 +67,29 @@ func SliceContains[T comparable](slice []T, value T) bool {
 }
 
 func CopyFile(sourceFile, destinationFile string) {
-	input, err := os.ReadFile(sourceFile)
+	replacer := cache.Get[*strings.Replacer]("envReplacer")
+	input, err := os.ReadFile(replacer.Replace(sourceFile))
 	if err != nil {
 		log.Error(err)
 		return
 	}
 
-	err = os.WriteFile(destinationFile, input, 0644)
+	err = os.WriteFile(replacer.Replace(destinationFile), input, 0644)
 	if err != nil {
 		log.Error(err)
 		return
 	}
+}
+
+func EnvReplacer() *strings.Replacer {
+	env := os.Environ()
+	pairs := make([]string, 0, len(env)*4)
+	for _, env := range env {
+		k, v, _ := strings.Cut(env, "=")
+		pairs = append(pairs, fmt.Sprintf("${%s}", k))
+		pairs = append(pairs, v)
+		pairs = append(pairs, fmt.Sprintf("$%s", k))
+		pairs = append(pairs, v)
+	}
+	return strings.NewReplacer(pairs...)
 }

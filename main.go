@@ -9,6 +9,7 @@ import (
 	"github.com/rafalb8/renv/cmd"
 	log "github.com/rafalb8/renv/logger"
 	"github.com/rafalb8/renv/types"
+	"github.com/rafalb8/renv/utils"
 	"github.com/rafalb8/renv/utils/cache"
 )
 
@@ -31,6 +32,9 @@ func init() {
 		}
 		json.NewDecoder(f).Decode(cfg)
 		return cfg
+	})
+	cache.Set("envReplacer", func() any {
+		return utils.EnvReplacer()
 	})
 
 	cache.Set("distro", func() any {

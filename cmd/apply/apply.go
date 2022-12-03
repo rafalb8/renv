@@ -58,8 +58,10 @@ func (cmd CMD) Execute(renv *types.REnv) {
 	if renv.Test != "" {
 		err := utils.RunCommand(renv.Test)
 		if err != nil {
+			log.Warning("Test Failed")
 			return
 		}
+		log.Info("Test OK")
 	}
 
 	// change dir
