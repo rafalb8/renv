@@ -7,6 +7,11 @@ To install run:
 curl -sfL https://raw.githubusercontent.com/rafalb8/renv/main/install.sh | sh
 ```
 
+or
+```bash
+go install github.com/rafalb8/renv@latest
+```
+
 # Usage
 
 ## Apply enviroment
