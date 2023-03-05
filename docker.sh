@@ -7,9 +7,14 @@ docker build -t renv -f - . << EOF
 FROM $1
 ADD renv /bin/renv
 
-WORKDIR /root
+RUN useradd -ms /bin/sh -G wheel user || adduser -Ds /bin/sh -G wheel user
+RUN renv install sudo
+RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/wheel
+USER user
+
+WORKDIR /home/user
 ADD test .renv
-WORKDIR /root/.renv
+WORKDIR /home/user/.renv
 EOF
 
 docker run --name renv --rm -it renv
