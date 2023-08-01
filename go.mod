@@ -1,3 +1,3 @@
 module github.com/rafalb8/renv
 
-go 1.19
+go 1.20
