@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -13,6 +12,7 @@ func isRoot() bool {
 
 func Exec(command []string, quiet ...bool) error {
 	cmd := exec.Command(command[0], command[1:]...)
+	cmd.Env = os.Environ()
 	if len(quiet) == 0 || !quiet[0] {
 		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout
@@ -23,7 +23,7 @@ func Exec(command []string, quiet ...bool) error {
 
 func EscalatedExec(command []string, quiet ...bool) error {
 	if !isRoot() {
-		command = append([]string{"sudo"}, command...)
+		command = append([]string{"sudo", "-E"}, command...)
 	}
 	return Exec(command, quiet...)
 }
@@ -31,7 +31,7 @@ func EscalatedExec(command []string, quiet ...bool) error {
 func GetDistro() string {
 	data, err := os.ReadFile("/etc/os-release")
 	if err != nil {
-		log.Fatal(err)
+		return ""
 	}
 	for _, line := range strings.Split(string(data), "\n") {
 		key, value, ok := strings.Cut(line, "=")
