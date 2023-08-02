@@ -3,6 +3,7 @@ package internal
 import (
 	"os"
 	"os/exec"
+	"path"
 	"strings"
 )
 
@@ -31,7 +32,7 @@ func EscalatedExec(command []string, quiet ...bool) error {
 func GetDistro() string {
 	data, err := os.ReadFile("/etc/os-release")
 	if err != nil {
-		return ""
+		return "unknown"
 	}
 	for _, line := range strings.Split(string(data), "\n") {
 		key, value, ok := strings.Cut(line, "=")
@@ -41,4 +42,16 @@ func GetDistro() string {
 		return value
 	}
 	return ""
+}
+
+func CopyFile(src, dst string) error {
+	err := os.MkdirAll(path.Dir(dst), 0755)
+	if err != nil {
+		return err
+	}
+	f, err := os.ReadFile(src)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(dst, f, 0644)
 }
