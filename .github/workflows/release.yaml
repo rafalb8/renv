@@ -4,6 +4,10 @@ on:
   release:
     types: [created]
 
+permissions:
+    contents: write
+    packages: write
+
 jobs:
   releases-matrix:
     name: Release Go Binary
@@ -14,12 +18,12 @@ jobs:
         goarch: [amd64, arm64]
     steps:
       - uses: actions/checkout@v3
-      - uses: wangyoucao577/go-release-action@v1.38
+      - uses: wangyoucao577/go-release-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
           ldflags: -s -w -X main.Version=${{ github.ref_name }}
-          project_path: ./cmd/renv
+          project_path: "./cmd/renv"
           md5sum: false
           sha256sum: false
