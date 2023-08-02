@@ -90,9 +90,9 @@ func test(renv *internal.Renv) error {
 func includes(renv *internal.Renv) error {
 	for _, inc := range renv.Include {
 		log.Debug("Include", inc)
-		f := path.Join(path.Dir(renv.Path), inc)
+		inc = path.Join(path.Dir(renv.Path), inc)
 		// Ignore error from included files
-		err := (&ApplyCmd{File: f}).Run()
+		err := (&ApplyCmd{File: inc}).Run()
 		if err != nil {
 			log.Debug(err)
 		}
@@ -114,6 +114,7 @@ func files(renv *internal.Renv) error {
 	}
 	for from, to := range renv.Files {
 		log.Debug("Copying file", path.Base(from), "to", to)
+		from = path.Join(path.Dir(renv.Path), from)
 		err := internal.CopyFile(from, to)
 		if err != nil {
 			return err
