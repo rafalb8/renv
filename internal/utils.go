@@ -44,7 +44,15 @@ func GetDistro() string {
 	return ""
 }
 
+func ApplyEnvVars(in string) string {
+	// TODO: add support for more variables
+	return strings.ReplaceAll(in, "$HOME", os.Getenv("HOME"))
+}
+
 func CopyFile(src, dst string) error {
+	src = ApplyEnvVars(src)
+	dst = ApplyEnvVars(dst)
+
 	err := os.MkdirAll(path.Dir(dst), 0755)
 	if err != nil {
 		return err
