@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/rafalb8/renv/internal"
+	"github.com/rafalb8/renv/internal/log"
 )
 
 type ApplyCmd struct {
@@ -16,6 +17,7 @@ type ApplyCmd struct {
 
 func (a *ApplyCmd) Run() error {
 	if a.File == "" {
+		log.Debug("Using default file")
 		home, err := os.UserHomeDir()
 		if err != nil {
 			return err
@@ -28,6 +30,7 @@ func (a *ApplyCmd) Run() error {
 	}
 
 	// Read file
+	log.Info("Applying file", a.File)
 	f, err := os.Open(a.File)
 	if err != nil {
 		return err
@@ -65,6 +68,8 @@ func distro(renv *internal.Renv) error {
 	if len(renv.Distro) == 0 {
 		return nil
 	}
+	log.Debug("Distro check")
+
 	currentDistro := internal.GetDistro()
 	for _, distro := range renv.Distro {
 		if distro == currentDistro {
@@ -78,26 +83,37 @@ func test(renv *internal.Renv) error {
 	if renv.Test == "" {
 		return nil
 	}
+	log.Debug("Test check", renv.Test)
 	return internal.Exec([]string{"sh", "-c", renv.Test}, true)
 }
 
 func includes(renv *internal.Renv) error {
-	for _, f := range renv.Include {
-		f := path.Join(path.Dir(renv.Path), f)
+	for _, inc := range renv.Include {
+		log.Debug("Include", inc)
+		f := path.Join(path.Dir(renv.Path), inc)
+		// Ignore error from included files
 		err := (&ApplyCmd{File: f}).Run()
 		if err != nil {
-			return err
+			log.Debug(err)
 		}
 	}
 	return nil
 }
 
 func packages(renv *internal.Renv) error {
+	if len(renv.Packages) == 0 {
+		return nil
+	}
+	log.Debug("Packages", renv.Packages)
 	return (&InstallCmd{Packages: renv.Packages}).Run()
 }
 
 func files(renv *internal.Renv) error {
+	if len(renv.Files) == 0 {
+		return nil
+	}
 	for from, to := range renv.Files {
+		log.Debug("Copying file", path.Base(from), "to", to)
 		err := internal.CopyFile(from, to)
 		if err != nil {
 			return err
@@ -107,8 +123,12 @@ func files(renv *internal.Renv) error {
 }
 
 func cmd(renv *internal.Renv) error {
-	for _, f := range renv.CMD {
-		err := internal.Exec([]string{"sh", "-c", f})
+	if len(renv.CMD) == 0 {
+		return nil
+	}
+	for _, c := range renv.CMD {
+		log.Debug("CMD", c)
+		err := internal.Exec([]string{"sh", "-c", c})
 		if err != nil {
 			return err
 		}
