@@ -5,11 +5,12 @@ import "fmt"
 type Level uint8
 
 const (
-	Debug Level = iota + 1
+	Debug Level = iota
 	Info
 	Warning
 	Error
 	Fatal
+	Hidden
 )
 
 func (l Level) Color() string {
@@ -35,9 +36,9 @@ func (l Level) String() string {
 	case Debug:
 		return "DEBUG"
 	case Info:
-		return " INFO"
+		return "INFO"
 	case Warning:
-		return " WARN"
+		return "WARN"
 	case Error:
 		return "ERROR"
 	case Fatal:
