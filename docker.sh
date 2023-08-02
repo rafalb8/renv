@@ -2,8 +2,7 @@
 
 set -ex
 
-CGO_ENABLED=0 go build ./cmd/renv
-# docker run --name renv --rm -it -v $(pwd):/data $@
+CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=docker" ./cmd/renv
 
 docker build -t renv -f - . << EOF
 FROM $1
