@@ -22,7 +22,7 @@ func (v *VersionCmd) Run() error {
 	fmt.Println("rEnv version:", Version)
 	fmt.Println("Commit time:", settings["vcs.time"])
 	fmt.Println("Commit hash:", settings["vcs.revision"])
-	fmt.Println("Dirty:", settings["vcs.modified"])
+	// fmt.Println("Dirty:", settings["vcs.modified"])
 
 	return nil
 }
