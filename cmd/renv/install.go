@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/rafalb8/renv/internal"
+	"github.com/rafalb8/renv/internal/log"
 )
 
 type packageManager struct {
@@ -27,7 +28,7 @@ var managers = map[string]packageManager{
 	"alpine": {
 		Update:  []string{"apk", "update"},
 		Install: []string{"apk", "add"},
-		Check:   []string{"apk", "list"},
+		Check:   []string{"apk", "info", "-e"},
 	},
 	"fedora": {
 		Update:  []string{"dnf", "update"},
@@ -77,8 +78,8 @@ func (i *InstallCmd) Run() error {
 	// Check for missing packages
 	missing := getMissingPackages(pm, i.Packages)
 	if len(missing) == 0 {
-		// fmt.Println("All packages are already installed")
-		return fmt.Errorf("all packages are already installed")
+		log.Warning("all packages are already installed")
+		return nil
 	}
 
 	// Update
